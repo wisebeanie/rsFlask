@@ -50,18 +50,13 @@ def getData(skins):
         df_feature.loc[str(index)] = [user,feature]
         
     #사용자가 입력한 정보를 df_feature 맨 아래에 추가  
-    df_feature
     df_feature.loc[str(index)] = ('input',skins)
     df_feature = df_feature.reset_index(drop=True)
-    print(df_feature)
     
     counter_vector = CountVectorizer(ngram_range=(1,3))
     c_vector_features = counter_vector.fit_transform(df_feature['feature'])
-    c_vector_features.shape
     
     similarity_feature = cosine_similarity(c_vector_features,c_vector_features).argsort()[:,::-1]
-    print(similarity_feature)
-    print(similarity_feature.shape)
 
     def recommend_user_list(df_feature, user , top=3):
         #특정 제품코드 뽑아내기
@@ -81,7 +76,6 @@ def getData(skins):
     similar_user = df_result['user']
     similar_user = similar_user.reset_index(drop=True)
     similar_user = similar_user[0]
-    similar_user
     
     A = df_review_count.pivot_table(index = 'code', columns = 'user',values = 'total_rating')
     A = A.copy().fillna(0)  
@@ -139,8 +133,6 @@ def getData(skins):
         
     result_dict['CF'] = products_dict
     
-    print(5)
-    
     return result_dict
 
 @app.route('/cf')
@@ -154,6 +146,8 @@ def cf():
     
     for skin_worries in skin_worries:
         skins = skins + ' ' + skin_worries
+        
+    print(skins)
 
     return getData(skins)
 
