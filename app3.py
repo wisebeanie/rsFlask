@@ -99,13 +99,11 @@ def getCf(skins):
         code_list.append(cos_id)
     code_list
     
-    result=[]
+    result_dict={}
     products_dict = {}
     i = 0
     for codes in code_list:
         for code in codes:
-    #         print(df_product[df_product['00.상품코드']==code]['00.상품_URL'].item())
-    #         print(df_product[df_product['00.상품코드']==code]['02.상품명'].item())
             
             product_dict = {}
             product_dict['productURL'] = str(df_product[df_product['00.상품코드']==code]['00.상품_URL'].item())
@@ -121,9 +119,9 @@ def getCf(skins):
         if i==10:
             break
             
-    result.append(products_dict)
+    result_dict['CF'] = products_dict
     
-    return result
+    return result_dict
 
 def getCbf(skins):
     dir = '화장품 추천시스템/최종데이터/'
