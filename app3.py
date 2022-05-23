@@ -151,7 +151,7 @@ def getCf(skins):
 def getCbf(skinList):
     dir = '화장품 추천시스템/최종데이터/'
     df_product = pd.read_csv(dir + 'basic_data_img.csv', usecols=['00.상품코드','00.상품_URL','00.이미지_URL','01.브랜드','02.상품명','03.가격','04.제품 주요 사양','05.모든 성분','06.총 평점','07.리뷰 개수','08_1.별점 1점','08_2.별점 2점','08_3.별점 3점','08_4.별점 4점','08_5.별점 5점','09_1.피부타입_건성','09_2.피부타입_복합성','09_3.피부타입_지성','10_1.피부고민_보습','10_2.피부고민_진정','10_3.피부고민_주름/미백','11_1.피부자극_없음','11_2.피부자극_보통','11_3.피부자극_있음'],encoding='cp949')
-    df_review = pd.read_csv(dir + 'total_review.csv', usecols=['code','user','type','tone','problem','rating','feature','review','total_rating'],encoding='cp949')
+    df_review = pd.read_csv(dir + 'review_data_edit.csv', usecols=['00.상품코드','01.리뷰어 닉네임','02_1.피부 타입','02_2.피부 톤','02_3.피부 고민','03.리뷰 평점','04.피부타입 | 피부고민 | 자극도','05.리뷰'],encoding='cp949')
     
     product_list = df_review['00.상품코드']
     product_list = product_list.unique()
