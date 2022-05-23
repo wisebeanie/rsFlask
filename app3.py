@@ -81,35 +81,23 @@ def getCf(skins):
     A = df_review_count.pivot_table(index = 'code', columns = 'user',values = 'total_rating')
     A = A.copy().fillna(0)
     
-    final_df = df_review_count[['user','code','total_rating']]
+    A_transpose = A.transpose()
+    user_based_collabor = cosine_similarity(A_transpose)
+    user_based_collabor = pd.DataFrame(data = user_based_collabor, index = A_transpose.index, columns = A_transpose.index)
+    user_based_collabor
     
-    reader = surprise.Reader(rating_scale = (1,5))
+    def get_user_based_collabor(user):
+        return user_based_collabor[user].sort_values(ascending=False)[:6]
+    similar_user_list = get_user_based_collabor(similar_user)
+    similar_user_list=similar_user_list[1:6]
+    similar_user_list = similar_user_list.index
 
-    col_list = ['user','code','total_rating']
-    data = surprise.Dataset.load_from_df(final_df[col_list], reader)
-
-    #surprise KNN 기반 CF 진행
-
-    #학습
-    trainset = data.build_full_trainset()
-    option = {'name' : 'pearson'}
-    algo = surprise.KNNBasic(sim_options = option)
-
-    algo.fit(trainset)
-    
-    name_list = final_df['user'].unique()
-    name_list = pd.Series(name_list)
-
-    index = name_list[name_list == similar_user].index[0]
-    
-    result = algo.get_neighbors(index,k=5)
-    
     code_list = []
-    for r1 in result:
-        max_rating = data.df[data.df['user']==name_list[r1]]['total_rating'].max()
-        cos_id = data.df[(data.df['total_rating']==max_rating)&(data.df['user']==name_list[r1])]['code'].values
-        
+    for r1 in similar_user_list:
+        max_rating = A[r1].max()
+        cos_id = A[A[r1]==max_rating].index  
         code_list.append(cos_id)
+    code_list
     
     result_dict={}
     products_dict = {}
