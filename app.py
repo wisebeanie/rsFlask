@@ -26,7 +26,7 @@ def getData():
 
     df_review_count = pd.merge(df_review,user_review_count,on='user',how='left')
     df_review_count = df_review_count[df_review_count['count']>=2]
-    df_review_count
+    print(df_review_count)
     
     df_user_feature = df_review_count[['user','type','tone','problem']]
     df_user_feature = df_user_feature.drop_duplicates(['user'])

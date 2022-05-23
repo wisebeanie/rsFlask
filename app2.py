@@ -27,6 +27,33 @@ def getData():
     df_review_count = pd.merge(df_review,user_review_count,on='user',how='left')
     df_review_count = df_review_count[df_review_count['count']>=2]
     
+    #사용자가 입력한 속성과 가장 비슷한 기존 유저를 뽑는 작업
+    df_user_feature = df_review_count[['user','type','tone','problem']]
+    df_user_feature = df_user_feature.drop_duplicates(['user'])
+
+    #user의 통합 feature를 담을 데이터 프레임
+    df_feature = pd.DataFrame(columns = ['user','feature'])
+
+    for index in df_user_feature.index:
+        user = df_user_feature.loc[index]['user']
+        problems = df_user_feature.loc[index]['problem']
+        problems_list = problems.split('|')
+        
+        problem = ''
+        for i in problems_list:
+            i = i.replace(" ","")
+            problem += (i+' ')
+        
+        feature = str(df_user_feature.loc[index]['type']) +' '+str(df_user_feature.loc[index]['tone']) + ' '+problem
+        
+        df_feature.loc[str(index)] = [user,feature]
+        
+    #사용자가 입력한 정보를 df_feature 맨 아래에 추가  
+    df_feature
+    df_feature.loc[str(index)] = ('input','복합성 쿨톤 모공 민감성 주름 탄력 트러블 홍조')
+    df_feature = df_feature.reset_index(drop=True)
+    print(df_feature)
+    
     A = df_review_count.pivot_table(index = 'code', columns = 'user',values = 'total_rating')
     A = A.copy().fillna(0)  
     
