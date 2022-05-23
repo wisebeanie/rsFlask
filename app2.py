@@ -15,7 +15,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
 
-def getData():
+def getData(skins):
     dir = '화장품 추천시스템/최종데이터/'
     df_product = pd.read_csv(dir + 'basic_data_img.csv', usecols=['00.상품코드','00.상품_URL','00.이미지_URL','01.브랜드','02.상품명','03.가격','04.제품 주요 사양','05.모든 성분','06.총 평점','07.리뷰 개수','08_1.별점 1점','08_2.별점 2점','08_3.별점 3점','08_4.별점 4점','08_5.별점 5점','09_1.피부타입_건성','09_2.피부타입_복합성','09_3.피부타입_지성','10_1.피부고민_보습','10_2.피부고민_진정','10_3.피부고민_주름/미백','11_1.피부자극_없음','11_2.피부자극_보통','11_3.피부자극_있음'],encoding='cp949')
     df_review = pd.read_csv(dir + 'total_review.csv', usecols=['code','user','type','tone','problem','rating','feature','review','total_rating'],encoding='cp949')
@@ -51,7 +51,7 @@ def getData():
         
     #사용자가 입력한 정보를 df_feature 맨 아래에 추가  
     df_feature
-    df_feature.loc[str(index)] = ('input','복합성 쿨톤 모공 민감성 주름 탄력 트러블 홍조')
+    df_feature.loc[str(index)] = ('input',skins)
     df_feature = df_feature.reset_index(drop=True)
     print(df_feature)
     
@@ -150,15 +150,12 @@ def cf():
     skin_tone = request.args.get('skintone')
     skin_worries = request.args.getlist('skinworry')
 
-    arr = skin_type + ' ' + skin_tone
+    skins = skin_type + ' ' + skin_tone
     
     for skin_worries in skin_worries:
-        arr = arr + ' ' + skin_worries
-    
-    print(arr)
-    
-    return 'hello'
-    #return getData()
+        skins = skins + ' ' + skin_worries
+
+    return getData(skins)
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=3000, debug=True)
