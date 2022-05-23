@@ -99,7 +99,7 @@ def getCf(skins):
         code_list.append(cos_id)
     code_list
     
-    result_dict={}
+    result=[]
     products_dict = {}
     i = 0
     for codes in code_list:
@@ -121,9 +121,9 @@ def getCf(skins):
         if i==10:
             break
             
-    result_dict['CF'] = products_dict
+    result.append(products_dict)
     
-    return result_dict
+    return result
 
 def getCbf(skins):
     dir = '화장품 추천시스템/최종데이터/'
