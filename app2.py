@@ -50,7 +50,7 @@ def getData(skins):
         df_feature.loc[str(index)] = [user,feature]
         
     #사용자가 입력한 정보를 df_feature 맨 아래에 추가  
-    df_feature.loc[str(index)] = ('input',skins)
+    df_feature.loc[str(index)] = ('input','복합성 쿨톤 모공 민감성 주름 탄력 트러블 홍조')
     df_feature = df_feature.reset_index(drop=True)
     
     counter_vector = CountVectorizer(ngram_range=(1,3))
