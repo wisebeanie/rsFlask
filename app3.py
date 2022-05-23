@@ -318,14 +318,14 @@ def cf():
 
 @app.route('/cbf')
 def cbf():
-    # skin_type = request.args.get('skintype')
-    # skin_tone = request.args.get('skintone')
-    # skin_worries = request.args.getlist('skinworry')
+    skin_type = request.args.get('skintype')
+    skin_tone = request.args.get('skintone')
+    skin_worries = request.args.getlist('skinworry')
     
-    # skins = skin_type + ' ' + skin_tone
-    skins = ''
-    # for skin_worries in skin_worries:
-    #     skins = skins + ' ' + skin_worries
+    skins = skin_type + ' ' + skin_tone
+    
+    for skin_worries in skin_worries:
+        skins = skins + ' ' + skin_worries
         
     return getCbf(skins)
 
