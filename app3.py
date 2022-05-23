@@ -13,13 +13,13 @@ from sklearn.manifold import TSNE # Use this for training t-sne manifolding
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+app = Flask(__name__)
 
-def getData():
+def getData(skins):
     dir = '화장품 추천시스템/최종데이터/'
     df_product = pd.read_csv(dir + 'basic_data_img.csv', usecols=['00.상품코드','00.상품_URL','00.이미지_URL','01.브랜드','02.상품명','03.가격','04.제품 주요 사양','05.모든 성분','06.총 평점','07.리뷰 개수','08_1.별점 1점','08_2.별점 2점','08_3.별점 3점','08_4.별점 4점','08_5.별점 5점','09_1.피부타입_건성','09_2.피부타입_복합성','09_3.피부타입_지성','10_1.피부고민_보습','10_2.피부고민_진정','10_3.피부고민_주름/미백','11_1.피부자극_없음','11_2.피부자극_보통','11_3.피부자극_있음'],encoding='cp949')
     df_review = pd.read_csv(dir + 'total_review.csv', usecols=['code','user','type','tone','problem','rating','feature','review','total_rating'],encoding='cp949')
-    
-    #2개 이상의 리뷰를 단 유저들만 추출
+
     user_review_count = df_review['user'].value_counts()
     user_review_count = pd.DataFrame(user_review_count)
     user_review_count = user_review_count.reset_index()
@@ -27,8 +27,8 @@ def getData():
 
     df_review_count = pd.merge(df_review,user_review_count,on='user',how='left')
     df_review_count = df_review_count[df_review_count['count']>=2]
-    print(df_review_count)
-
+    df_review_count
+    
     #사용자가 입력한 속성과 가장 비슷한 기존 유저를 뽑는 작업
     df_user_feature = df_review_count[['user','type','tone','problem']]
     df_user_feature = df_user_feature.drop_duplicates(['user'])
@@ -49,21 +49,21 @@ def getData():
         feature = str(df_user_feature.loc[index]['type']) +' '+str(df_user_feature.loc[index]['tone']) + ' '+problem
         
         df_feature.loc[str(index)] = [user,feature]
-    
+        
     #사용자가 입력한 정보를 df_feature 맨 아래에 추가  
     df_feature
     df_feature.loc[str(index)] = ('input','복합성 쿨톤 모공 민감성 주름 탄력 트러블 홍조')
     df_feature = df_feature.reset_index(drop=True)
     print(df_feature)
-
+    
     counter_vector = CountVectorizer(ngram_range=(1,3))
     c_vector_features = counter_vector.fit_transform(df_feature['feature'])
-    print(c_vector_features.shape)
+    c_vector_features.shape
     
     similarity_feature = cosine_similarity(c_vector_features,c_vector_features).argsort()[:,::-1]
     print(similarity_feature)
     print(similarity_feature.shape)
-
+    
     def recommend_user_list(df_feature, user , top=3):
         #특정 제품코드 뽑아내기
         target_feature_index = df_feature[df_feature['user'] == user].index.values
@@ -76,26 +76,27 @@ def getData():
         #추천 결과 새로운 df 생성, 평균평점(score)으로 정렬
         result = df_feature.iloc[sim_index]
         
-        return result   
-
+        return result
+    
     df_result = recommend_user_list(df_feature, user='input')
     similar_user = df_result['user']
     similar_user = similar_user.reset_index(drop=True)
     similar_user = similar_user[0]
-    print(similar_user)
+    similar_user
     
     A = df_review_count.pivot_table(index = 'code', columns = 'user',values = 'total_rating')
     A = A.copy().fillna(0)
-    print(A)
     
     final_df = df_review_count[['user','code','total_rating']]
-    print(final_df)
+    final_df
     
     reader = surprise.Reader(rating_scale = (1,5))
 
     col_list = ['user','code','total_rating']
     data = surprise.Dataset.load_from_df(final_df[col_list], reader)
-    
+
+    #surprise KNN 기반 CF 진행
+
     #학습
     trainset = data.build_full_trainset()
     option = {'name' : 'pearson'}
@@ -107,8 +108,7 @@ def getData():
     name_list = pd.Series(name_list)
 
     index = name_list[name_list == similar_user].index[0]
-    print(index)
-    print(name_list)
+    index
     
     result = algo.get_neighbors(index,k=5)
     print('해당 사용자와 가장 유사한 사용자들은?', result)
@@ -120,7 +120,7 @@ def getData():
         cos_id = data.df[(data.df['total_rating']==max_rating)&(data.df['user']==name_list[r1])]['code'].values
         
         code_list.append(cos_id)
-    print(code_list)
+    code_list
     
     result_dict={}
     products_dict = {}
@@ -143,16 +143,27 @@ def getData():
                 break
         if i==10:
             break
-        
+            
     result_dict['CF'] = products_dict
-    return result_dict
     
-app = Flask(__name__)
+    return result_dict
 
 @app.route('/cf')
 def cf():
     
-    return getData()
+    skin_type = request.args.get('skintype')
+    skin_tone = request.args.get('skintone')
+    skin_worries = request.args.getlist('skinworry')
+
+    skins = skin_type + ' ' + skin_tone
+    
+    for skin_worries in skin_worries:
+        skins = skins + ' ' + skin_worries
+        
+    print(skins)
+    #return skins
+    
+    return getData(skins)
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=3000, debug=True)
