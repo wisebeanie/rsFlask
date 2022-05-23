@@ -240,7 +240,7 @@ def getCbf(skins):
     
     similarity_feature = cosine_similarity(c_vector_features,c_vector_features).argsort()[:,::-1]
     
-    def recommend_product_list(df_feature, code , top=11):
+    def recommend_product_list(df_feature, code , top=6):
         #특정 제품코드 뽑아내기
         target_feature_index = df_feature[df_feature['code'] == code].index.values
 
