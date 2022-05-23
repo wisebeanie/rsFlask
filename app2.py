@@ -36,13 +36,14 @@ def getData():
 
     col_list = ['user','code','total_rating']
     data = surprise.Dataset.load_from_df(final_df[col_list], reader)
-    
+    print(3)
     trainset = data.build_full_trainset()
     option = {'name' : 'pearson'}
     algo = surprise.KNNBasic(sim_options = option)
 
     algo.fit(trainset)
     
+    print(4)
     name_list = final_df['user'].unique()
     name_list = pd.Series(name_list)
 
@@ -84,6 +85,8 @@ def getData():
             break
         
     result_dict['CF'] = products_dict
+    
+    print(5)
     
     return result_dict
 
