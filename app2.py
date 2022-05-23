@@ -148,7 +148,7 @@ def cf():
     
     skin_type = request.args.get('skintype')
     skin_tone = request.args.get('skintone')
-    skin_worry = request.args.get('skin_worry')
+    skin_worry = request.args.get('skinworry')
     print(skin_type)
     print(skin_tone)
     print(skin_worry)
