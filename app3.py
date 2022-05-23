@@ -27,7 +27,6 @@ def getCf(skins):
 
     df_review_count = pd.merge(df_review,user_review_count,on='user',how='left')
     df_review_count = df_review_count[df_review_count['count']>=2]
-    df_review_count
     
     #사용자가 입력한 속성과 가장 비슷한 기존 유저를 뽑는 작업
     df_user_feature = df_review_count[['user','type','tone','problem']]
@@ -51,18 +50,14 @@ def getCf(skins):
         df_feature.loc[str(index)] = [user,feature]
         
     #사용자가 입력한 정보를 df_feature 맨 아래에 추가  
-    df_feature
     df_feature.loc[str(index)] = ('input',skins)
     df_feature = df_feature.reset_index(drop=True)
-    print(df_feature)
+
     
     counter_vector = CountVectorizer(ngram_range=(1,3))
     c_vector_features = counter_vector.fit_transform(df_feature['feature'])
-    c_vector_features.shape
-    
+
     similarity_feature = cosine_similarity(c_vector_features,c_vector_features).argsort()[:,::-1]
-    print(similarity_feature)
-    print(similarity_feature.shape)
     
     def recommend_user_list(df_feature, user , top=3):
         #특정 제품코드 뽑아내기
@@ -82,13 +77,11 @@ def getCf(skins):
     similar_user = df_result['user']
     similar_user = similar_user.reset_index(drop=True)
     similar_user = similar_user[0]
-    similar_user
     
     A = df_review_count.pivot_table(index = 'code', columns = 'user',values = 'total_rating')
     A = A.copy().fillna(0)
     
     final_df = df_review_count[['user','code','total_rating']]
-    final_df
     
     reader = surprise.Reader(rating_scale = (1,5))
 
@@ -108,11 +101,8 @@ def getCf(skins):
     name_list = pd.Series(name_list)
 
     index = name_list[name_list == similar_user].index[0]
-    index
     
     result = algo.get_neighbors(index,k=5)
-    print('해당 사용자와 가장 유사한 사용자들은?', result)
-    print(name_list[result])
     
     code_list = []
     for r1 in result:
@@ -120,7 +110,6 @@ def getCf(skins):
         cos_id = data.df[(data.df['total_rating']==max_rating)&(data.df['user']==name_list[r1])]['code'].values
         
         code_list.append(cos_id)
-    code_list
     
     result_dict={}
     products_dict = {}
@@ -155,7 +144,6 @@ def getCbf(skins):
     
     product_list = df_review['00.상품코드']
     product_list = product_list.unique()
-    len(product_list)
     
     df_review.columns = ['code','user','type','tone','problem','rating','feature','review']
     df_review = df_review.dropna(axis=0)
@@ -258,11 +246,8 @@ def getCbf(skins):
     
     counter_vector = CountVectorizer(ngram_range=(1,3))
     c_vector_features = counter_vector.fit_transform(df_feature['feature'])
-    c_vector_features.shape
     
     similarity_feature = cosine_similarity(c_vector_features,c_vector_features).argsort()[:,::-1]
-    print(similarity_feature)
-    print(similarity_feature.shape)
     
     def recommend_product_list(df_feature, code , top=11):
         #특정 제품코드 뽑아내기
