@@ -87,9 +87,9 @@ def getCf(skins):
     user_based_collabor
     
     def get_user_based_collabor(user):
-        return user_based_collabor[user].sort_values(ascending=False)[:6]
+        return user_based_collabor[user].sort_values(ascending=False)[:15]
     similar_user_list = get_user_based_collabor(similar_user)
-    similar_user_list=similar_user_list[1:6]
+    similar_user_list=similar_user_list[1:15]
     similar_user_list = similar_user_list.index
 
     code_list = []
@@ -99,36 +99,34 @@ def getCf(skins):
         code_list.append(cos_id)
     code_list
     
-    result_dict={}
-    products_dict = {}
-    i = 0
+    final_code_list = []
+
     for codes in code_list:
         for code in codes:
-            
-            product_dict = {}
-            product_dict['productURL'] = str(df_product[df_product['00.상품코드']==code]['00.상품_URL'].item())
-            product_dict['imageURL'] = str(df_product[df_product['00.상품코드']==code]['00.이미지_URL'].item())
-            product_dict['brand'] = str(df_product[df_product['00.상품코드']==code]['01.브랜드'].item())
-            product_dict['productName'] = str(df_product[df_product['00.상품코드']==code]['02.상품명'].item())
-            product_dict['price'] = int(df_product[df_product['00.상품코드']==code]['03.가격'].item())
-            
-            products_dict[i+1] = product_dict
-            i+=1
-            if i==10:
-                break
-        if i==10:
+            final_code_list.append(code)
+    final_code_set = set(final_code_list)
+    final_code_list = list(final_code_set)
+    
+    df_product = df_product.drop_duplicates(['00.상품코드'])
+    df_product = df_product.drop_duplicates(['02.상품명'])
+    
+    result_dict={}
+    products_dict = {}
+    for index, code in enumerate(final_code_list):
+        product_dict = {}
+        product_dict['productURL'] = str(df_product[df_product['00.상품코드']==code]['00.상품_URL'].item())
+        product_dict['imageURL'] = str(df_product[df_product['00.상품코드']==code]['00.이미지_URL'].item())
+        product_dict['brand'] = str(df_product[df_product['00.상품코드']==code]['01.브랜드'].item())
+        product_dict['productName'] = str(df_product[df_product['00.상품코드']==code]['02.상품명'].item())
+        product_dict['price'] = int(df_product[df_product['00.상품코드']==code]['03.가격'].item())
+        products_dict[index] = product_dict
+        if index == 4:
             break
         
-    seen = []
-    result = dict()
-    for key, val in products_dict.items():
-        if val not in seen:
-            seen.append(val)
-            result[key] = val
-            
-    # result_dict['CF'] = products_dict
+        
+    result_dict['CF'] = products_dict
     
-    return result
+    return result_dict
 
 def getCbf(skins):
     dir = '화장품 추천시스템/최종데이터/'
