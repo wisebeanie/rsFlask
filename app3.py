@@ -159,10 +159,6 @@ def cf():
     for skin_worries in skin_worries:
         skins = skins + ' ' + skin_worries
         
-    print(type(skins))
-    #return skins
-    if skins == '복합성 쿨톤 모공 민감성 주름 탄력 트러블 홍조':
-        print('equal!')
     return getData(skins)
 
 if __name__ == '__main__':
