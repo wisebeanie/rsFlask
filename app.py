@@ -31,7 +31,7 @@ def getData():
 
     #user의 통합 feature를 담을 데이터 프레임
     df_feature = pd.DataFrame(columns = ['user','feature'])
-
+    print(1)
     for index in df_user_feature.index:
         user = df_user_feature.loc[index]['user']
         problems = df_user_feature.loc[index]['problem']
@@ -68,7 +68,7 @@ def getData():
         result = df_feature.iloc[sim_index]
         
         return result   
-    
+    print(2)
     df_result = recommend_user_list(df_feature, user='input')
     similar_user = df_result['user']
     similar_user = similar_user.reset_index(drop=True)
@@ -89,7 +89,7 @@ def getData():
     algo = surprise.KNNBasic(sim_options = option)
 
     algo.fit(trainset)
-    
+    print(3)
     name_list = final_df['user'].unique()
     name_list = pd.Series(name_list)
 
