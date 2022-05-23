@@ -52,7 +52,7 @@ def getData(skins):
         
     #사용자가 입력한 정보를 df_feature 맨 아래에 추가  
     df_feature
-    df_feature.loc[str(index)] = ('input','복합성 쿨톤 모공 민감성 주름 탄력 트러블 홍조')
+    df_feature.loc[str(index)] = ('input',skins)
     df_feature = df_feature.reset_index(drop=True)
     print(df_feature)
     
@@ -160,7 +160,7 @@ def cf():
     for skin_worries in skin_worries:
         skins = skins + ' ' + skin_worries
         
-    print(skins)
+    print(type(skins))
     #return skins
     
     return getData(skins)
