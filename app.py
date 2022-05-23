@@ -84,12 +84,15 @@ def getData():
     col_list = ['user','code','total_rating']
     data = surprise.Dataset.load_from_df(final_df[col_list], reader)
     
+    #학습
+    print(1)
     trainset = data.build_full_trainset()
     option = {'name' : 'pearson'}
     algo = surprise.KNNBasic(sim_options = option)
 
     algo.fit(trainset)
-    print(3)
+    print(2)
+    
     name_list = final_df['user'].unique()
     name_list = pd.Series(name_list)
 
@@ -106,7 +109,7 @@ def getData():
         cos_id = data.df[(data.df['total_rating']==max_rating)&(data.df['user']==name_list[r1])]['code'].values
         
         code_list.append(cos_id)
-        
+    print(3)
     result_dict={}
     products_dict = {}
     i = 0
