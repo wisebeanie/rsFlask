@@ -150,7 +150,6 @@ def getData(skins):
 
 @app.route('/cf')
 def cf():
-    
     skin_type = request.args.get('skintype')
     skin_tone = request.args.get('skintone')
     skin_worries = request.args.getlist('skinworry')
@@ -162,7 +161,8 @@ def cf():
         
     print(type(skins))
     #return skins
-    
+    if skins == '복합성 쿨톤 모공 민감성 주름 탄력 트러블 홍조':
+        print('equal!')
     return getData(skins)
 
 if __name__ == '__main__':
