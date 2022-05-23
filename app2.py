@@ -127,9 +127,6 @@ def getData(skins):
     i = 0
     for codes in code_list:
         for code in codes:
-    #         print(df_product[df_product['00.상품코드']==code]['00.상품_URL'].item())
-    #         print(df_product[df_product['00.상품코드']==code]['02.상품명'].item())
-            
             product_dict = {}
             product_dict['productURL'] = str(df_product[df_product['00.상품코드']==code]['00.상품_URL'].item())
             product_dict['imageURL'] = str(df_product[df_product['00.상품코드']==code]['00.이미지_URL'].item())
