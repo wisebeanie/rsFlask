@@ -143,15 +143,20 @@ def getData():
     
     return result_dict
 
+def normalize_query(params):
+    params_non_flat = params.to_dict(flat=False)
+    return {k: normalize_query_param}
+
 @app.route('/cf')
 def cf():
     
     skin_type = request.args.get('skintype')
     skin_tone = request.args.get('skintone')
-    skin_worry = request.args.get('skinworry')
+    skin_worry = request.args.getlist('skinworry')
     print(skin_type)
     print(skin_tone)
     print(skin_worry)
+
     
     return 'hello'
     #return getData()
