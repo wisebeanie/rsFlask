@@ -114,7 +114,7 @@ def getCf(skins):
             product_dict['productName'] = str(df_product[df_product['00.상품코드']==code]['02.상품명'].item())
             product_dict['price'] = int(df_product[df_product['00.상품코드']==code]['03.가격'].item())
             
-            products_dict[i] = product_dict
+            products_dict[i+1] = product_dict
             i+=1
             if i==10:
                 break
