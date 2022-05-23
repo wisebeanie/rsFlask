@@ -54,6 +54,34 @@ def getData():
     df_feature = df_feature.reset_index(drop=True)
     print(df_feature)
     
+    counter_vector = CountVectorizer(ngram_range=(1,3))
+    c_vector_features = counter_vector.fit_transform(df_feature['feature'])
+    c_vector_features.shape
+    
+    similarity_feature = cosine_similarity(c_vector_features,c_vector_features).argsort()[:,::-1]
+    print(similarity_feature)
+    print(similarity_feature.shape)
+    
+    def recommend_user_list(df_feature, user , top=3):
+        #특정 제품코드 뽑아내기
+        target_feature_index = df_feature[df_feature['user'] == user].index.values
+
+        #타켓제품과 비슷한 코사인 유사도값
+        sim_index = similarity_feature[int(target_feature_index),:top].reshape(-1)
+        #본인제외
+        sim_index = sim_index[sim_index!=target_feature_index]
+        
+        #추천 결과 새로운 df 생성, 평균평점(score)으로 정렬
+        result = df_feature.iloc[sim_index]
+        
+        return result
+    
+    df_result = recommend_user_list(df_feature, user='input')
+    similar_user = df_result['user']
+    similar_user = similar_user.reset_index(drop=True)
+    similar_user = similar_user[0]
+    similar_user
+    
     A = df_review_count.pivot_table(index = 'code', columns = 'user',values = 'total_rating')
     A = A.copy().fillna(0)  
     
@@ -72,7 +100,7 @@ def getData():
     name_list = final_df['user'].unique()
     name_list = pd.Series(name_list)
 
-    index = name_list[name_list == '뮹뮹'].index[0]
+    index = name_list[name_list == similar_user].index[0]
     
     name_list = final_df['user'].unique()
     name_list = pd.Series(name_list)
