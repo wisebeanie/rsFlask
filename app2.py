@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import request
 import sys
 from unittest import result
 import warnings
@@ -61,7 +62,7 @@ def getData():
     similarity_feature = cosine_similarity(c_vector_features,c_vector_features).argsort()[:,::-1]
     print(similarity_feature)
     print(similarity_feature.shape)
-    
+
     def recommend_user_list(df_feature, user , top=3):
         #특정 제품코드 뽑아내기
         target_feature_index = df_feature[df_feature['user'] == user].index.values
@@ -142,9 +143,18 @@ def getData():
     
     return result_dict
 
-@app.route('/test')
-def test():
-    return getData()
+@app.route('/cf')
+def cf():
+    
+    skin_type = request.args.get('skintype')
+    skin_tone = request.args.get('skintone')
+    skin_worry = request.args.get('skin_worry')
+    print(skin_type)
+    print(skin_tone)
+    print(skin_worry)
+    
+    return 'hello'
+    #return getData()
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=3000, debug=True)

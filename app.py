@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import request
 import sys
 from unittest import result
 import warnings
@@ -27,9 +28,6 @@ def getData():
     df_review_count = pd.merge(df_review,user_review_count,on='user',how='left')
     df_review_count = df_review_count[df_review_count['count']>=2]
     print(df_review_count)
-    
-    df_user_feature = df_review_count[['user','type','tone','problem']]
-    df_user_feature = df_user_feature.drop_duplicates(['user'])
 
     #사용자가 입력한 속성과 가장 비슷한 기존 유저를 뽑는 작업
     df_user_feature = df_review_count[['user','type','tone','problem']]
@@ -151,9 +149,18 @@ def getData():
     
 app = Flask(__name__)
 
-@app.route('/test')
-def test():
-    return getData()
+@app.route('/cf')
+def cf():
+    skin_type = request.args.get('skintype')
+    skin_tone = request.args.get('skintone')
+    skin_worry = request.args.get('skin_worry')
+    print(skin_type)
+    print(skin_tone)
+    print(skin_worry)
+    
+    return 'hello'
+    
+    #return getData()
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=3000, debug=True)
