@@ -118,10 +118,17 @@ def getCf(skins):
                 break
         if i==10:
             break
+        
+    seen = []
+    result = dict()
+    for key, val in products_dict.items():
+        if val not in seen:
+            seen.append(val)
+            result[key] = val
             
-    result_dict['CF'] = products_dict
+    # result_dict['CF'] = products_dict
     
-    return result_dict
+    return result
 
 def getCbf(skins):
     dir = '화장품 추천시스템/최종데이터/'
