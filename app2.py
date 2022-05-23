@@ -148,8 +148,9 @@ def cf():
         skins = skins + ' ' + skin_worries
         
     print(skins)
-
-    return getData(skins)
+    return skins
+    
+    #return getData(skins)
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=3000, debug=True)
