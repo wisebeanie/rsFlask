@@ -60,7 +60,7 @@ def getCf(skins):
     similarity_feature = cosine_similarity(c_vector_features,c_vector_features).argsort()[:,::-1]
     
     def recommend_user_list(df_feature, user , top=3):
-        #특정 제품코드 뽑아내기
+        #특정 유저 뽑아내기
         target_feature_index = df_feature[df_feature['user'] == user].index.values
 
         #타켓제품과 비슷한 코사인 유사도값
@@ -78,26 +78,28 @@ def getCf(skins):
     similar_user = similar_user.reset_index(drop=True)
     similar_user = similar_user[0]
     
+    name_list = df_review_count['user'].unique()
+    name_list = pd.Series(name_list)
+    
     A = df_review_count.pivot_table(index = 'code', columns = 'user',values = 'total_rating')
     A = A.copy().fillna(0)
-    
+        
     A_transpose = A.transpose()
     user_based_collabor = cosine_similarity(A_transpose)
     user_based_collabor = pd.DataFrame(data = user_based_collabor, index = A_transpose.index, columns = A_transpose.index)
-    user_based_collabor
     
     def get_user_based_collabor(user):
         return user_based_collabor[user].sort_values(ascending=False)[:15]
     similar_user_list = get_user_based_collabor(similar_user)
     similar_user_list=similar_user_list[1:15]
     similar_user_list = similar_user_list.index
+    similar_user_list
 
     code_list = []
     for r1 in similar_user_list:
         max_rating = A[r1].max()
         cos_id = A[A[r1]==max_rating].index  
         code_list.append(cos_id)
-    code_list
     
     final_code_list = []
 
@@ -109,10 +111,11 @@ def getCf(skins):
     
     df_product = df_product.drop_duplicates(['00.상품코드'])
     df_product = df_product.drop_duplicates(['02.상품명'])
-    
+        
     result_dict={}
     products_dict = {}
     for index, code in enumerate(final_code_list):
+        print(code)
         product_dict = {}
         product_dict['productURL'] = str(df_product[df_product['00.상품코드']==code]['00.상품_URL'].item())
         product_dict['imageURL'] = str(df_product[df_product['00.상품코드']==code]['00.이미지_URL'].item())
