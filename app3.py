@@ -15,7 +15,10 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={
+    r"/cf/*": {"origin": "*"},
+    r"/cbf/*": {"origin": "*"},
+})
 
 def getCf(skins):
     dir = '화장품 추천시스템/최종데이터/'
