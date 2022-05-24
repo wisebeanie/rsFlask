@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import surprise
 import json
+from flask_cors import CORS
 from sklearn.decomposition import NMF # Use this for training Non-negative Matrix Factorization
 from sklearn.utils.extmath import randomized_svd # Use this for training Singular Value Decomposition
 from sklearn.manifold import TSNE # Use this for training t-sne manifolding
@@ -14,6 +15,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
+CORS(app)
 
 def getCf(skins):
     dir = '화장품 추천시스템/최종데이터/'
