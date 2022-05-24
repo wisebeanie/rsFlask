@@ -121,8 +121,7 @@ def getCf(skins):
         product_dict['brand'] = str(df_product[df_product['00.상품코드']==code]['01.브랜드'].item())
         product_dict['productName'] = str(df_product[df_product['00.상품코드']==code]['02.상품명'].item())
         product_dict['price'] = int(df_product[df_product['00.상품코드']==code]['03.가격'].item())
-        #products_dict[index+1] = product_dict
-        products_dict['result'] = product_dict
+        products_dict[index+1] = product_dict
         if index == 4:
             break
         
@@ -276,8 +275,7 @@ def getCbf(skins):
         product_dict['productName'] = str(df_recommend.loc[index]['02.상품명'])
         product_dict['price'] = int(df_recommend.loc[index]['03.가격'])
 
-        #products_dict[index] = product_dict
-        products_dict['result'] = product_dict
+        products_dict[index] = product_dict
         
     result_dict['CBF'] = products_dict
 
